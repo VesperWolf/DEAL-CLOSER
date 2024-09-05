@@ -3,9 +3,11 @@
 @tailwind utilities;
 
 @layer components {
+  .bg-background {
+    @apply bg-background;
+  }
   .border-border {
-    /* Define your custom styles here */
-    border: 1px solid #000;
+    @apply border-border;
   }
 }
 
