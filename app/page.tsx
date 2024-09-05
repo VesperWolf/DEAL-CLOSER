@@ -1,4 +1,4 @@
-'use client'
+Turn off'use client'
 
 import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { Button } from "@/components/ui/button"
@@ -17,70 +17,6 @@ import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 
-// Type Definitions
-type Deal = {
-  id: number;
-  title: string;
-  price: string;
-  closingDate: string;
-  stage: string;
-  properties: Property[];
-  contacts: Contact[];
-  communications: Communication[];
-  activities: Activity[];
-};
-
-type Property = {
-  id: number;
-  address: string;
-  latitude: number;
-  longitude: number;
-  description: string;
-  squareFeet: number;
-  bedrooms: number;
-  bathrooms: number;
-  yearBuilt: number;
-  lotSize: string;
-  garageSpaces: number;
-  schoolDistrict: string;
-  propertyType: string;
-  heatingCooling: string;
-  appliances: string[];
-  exteriorFeatures: string[];
-  interiorFeatures: string[];
-  hoa: {
-    fee: string;
-    includes: string[];
-  };
-  taxInfo: {
-    annualAmount: string;
-    year: number;
-  };
-};
-
-type Contact = {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-};
-
-type Communication = {
-  id: number;
-  type: string;
-  date: string;
-  content: string;
-};
-
-type Activity = {
-  id: number;
-  type: string;
-  date: string;
-  content: string;
-};
-
-// Rest of your component code
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+'
 const LOGIN_PATTERN = 'LOGIN_'
 const WELCOME_MESSAGE = 'WELCOME, ELI'
@@ -134,25 +70,93 @@ export default function Component() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [currentPage, setCurrentPage] = useState("properties")
   const [viewMode, setViewMode] = useState("list")
-  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null)
+  const [selectedDeal, setSelectedDeal] = useState<any>(null)
   const [editMode, setEditMode] = useState(false)
-  const [editedDeal, setEditedDeal] = useState<Deal | null>(null)
+  const [editedDeal, setEditedDeal] = useState<any>(null)
   const [filterStage, setFilterStage] = useState("All")
   const [selectedProperties, setSelectedProperties] = useState<number[]>([])
   const [showUserProfile, setShowUserProfile] = useState(false)
-  const [draggedDeal, setDraggedDeal] = useState<Deal | null>(null)
+  const [draggedDeal, setDraggedDeal] = useState<any>(null)
   const [dealViewMode, setDealViewMode] = useState("list")
   const [expandedDealId, setExpandedDealId] = useState<number | null>(null)
   const [showExpandedDetails, setShowExpandedDetails] = useState(false)
-  const [currentDealIndex, setCurrentDealIndex] = useState(0)
-
   const [dialPadNumber, setDialPadNumber] = useState('+1')
   const [textMessages, setTextMessages] = useState<string[]>([])
   const [currentTextMessage, setCurrentTextMessage] = useState('')
   const [notes, setNotes] = useState('')
-  const [emails, setEmails] = useState<{ id: number; subject: string; sender: string; preview: string; date: string }[]>([
-    // Your initial email data here
+
+  const [deals, setDeals] = useState(() => {
+    const streets = ['Main St', 'Broadway', 'Hillsboro Pike', 'West End Ave', 'Church St', 'Music Row', 'Belmont Blvd', '12th Ave S', '8th Ave S', 'Woodland St']
+    const cities = ['Nashville', 'Franklin', 'Brentwood', 'Murfreesboro', 'Hendersonville']
+    const stages = ["New", "Attempting", "In Conversation", "Interested", "Appointments", "Post Appointment", "Future Opportunities", "Deal"]
+    
+    return Array.from({ length: 30 }, (_, i) => ({
+      id: i + 1,
+      address: `${Math.floor(Math.random() * 1000) + 1} ${streets[Math.floor(Math.random() * streets.length)]}, ${cities[Math.floor(Math.random() * cities.length)]}, TN`,
+      price: `$${(Math.floor(Math.random() * 1000) + 200) * 1000}`,
+      date: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
+      stage: stages[Math.floor(Math.random() * stages.length)],
+      latitude: 36.1627 + (Math.random() - 0.5) * 0.1,
+      longitude: -86.7816 + (Math.random() - 0.5) * 0.1,
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      squareFeet: Math.floor(Math.random() * 3000) + 1000,
+      bedrooms: Math.floor(Math.random() * 5) + 1,
+      bathrooms: Math.floor(Math.random() * 3) + 1,
+      yearBuilt: Math.floor(Math.random() * 50) + 1970,
+      lotSize: `${(Math.random() * 0.9 + 0.1).toFixed(2)} acres`,
+      garageSpaces: Math.floor(Math.random() * 3),
+      schoolDistrict: "Metro Nashville Public Schools",
+      propertyType: Math.random() > 0.3 ? "Single Family Home" : "Condo",
+      heatingCooling: "Central HVAC",
+      appliances: ["Refrigerator", "Dishwasher", "Washer", "Dryer"],
+      exteriorFeatures: ["Deck", "Fenced Yard", "Sprinkler System"],
+      interiorFeatures: ["Hardwood Floors", "Fireplace", "Open Floor Plan"],
+      hoa: {
+        fee: Math.random() > 0.5 ? `$${Math.floor(Math.random() * 300) + 50}/month` : "N/A",
+        includes: ["Common Area Maintenance", "Trash Removal"]
+      },
+      taxInfo: {
+        annualAmount: `$${Math.floor(Math.random() * 5000) + 2000}`,
+        year: 2023
+      },
+      contacts: [
+        { name: `Agent ${i + 1}`, email: `agent${i + 1}@example.com`, phone: `615-555-${1000 + i}`, role: "Listing Agent" },
+      ],
+      communications: [
+        { type: "email", date: "2024-07-01", content: "Initial outreach to listing agent" },
+      ],
+      activities: [
+        { type: "viewing", date: "2024-07-10", content: "Property viewing scheduled with potential buyers" },
+      ],
+    }))
+  })
+
+  const [dealPackages, setDealPackages] = useState([
+    { 
+      id: 1, 
+      name: "Downtown Nashville Package", 
+      properties: [
+        { id: 1, closingDate: "2024-12-15", price: "$450,000" },
+        { id: 2, closingDate: "2024-12-20", price: "$750,000" },
+      ],
+      buyer: { name: "John Doe", email: "john@example.com", phone: "615-555-1234" },
+      seller: { name: "Jane Smith", email: "jane@example.com", phone: "615-555-5678" }
+    },
+    { 
+      id: 2, 
+      name: "Luxury Homes Collection", 
+      properties: [
+        { id: 3, closingDate: "2025-01-10", price: "$1,200,000" }
+      ],
+      buyer: { name: "Alice Brown", email: "alice@example.com", phone: "615-555-3698" },
+      seller: { name: "Bob Johnson", email: "bob@example.com", phone: "615-555-2468" }
+    },
   ])
+
+  const [actionBarPosition, setActionBarPosition] = useState(50) // Start at the width of the left sidebar
+  const [isDragging, setIsDragging] = useState(false)
+  const actionBarRef = useRef<HTMLDivElement>(null)
+  const [openPopups, setOpenPopups] = useState<string[]>([])
 
   const initializeGrid = useCallback(() => {
     if (!containerRef.current) return []
@@ -230,36 +234,196 @@ export default function Component() {
         index++
       } else {
         clearInterval(interval)
+        setShowCursor(true)
+        // Add a 0.7-second pause before showing the deal management part
+        setTimeout(() => {
+          setShowDealManagement(true)
+        }, 700)
       }
     }, 100)
   }
 
-  // const handleDealTitleChange = (id: number, title: string) => {
-  //   // Your logic here
-  // } // Commented out unused function
+  const handleDragStart = (e: React.DragEvent, deal: any) => {
+    e.dataTransfer.setData("application/json", JSON.stringify(deal))
+    e.dataTransfer.effectAllowed = "move"
+    setDraggedDeal(deal)
+  }
 
-  // const handleAddPropertyToPackage = (packageId: number, property: Property) => {
-  //   // Your logic here
-  // } // Commented out unused function
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = "move"
+  }
 
-  // const handleUpdatePropertyInPackage = (packageId: number, propertyId: number, updatedProperty: Property) => {
-  //   // Your logic here
-  // } // Commented out unused function
+  const handleDrop = (e: React.DragEvent, newStage: string) => {
+    e.preventDefault()
+    const dealData = e.dataTransfer.getData("application/json")
+    const deal = JSON.parse(dealData)
+    
+    if (deal.stage !== newStage)
 
-  // const handleAssignContact = (dealId: number, contact: Contact) => {
-  //   // Your logic here
-  // } // Commented out unused function
+ {
+      setDeals((prevDeals) =>
+        prevDeals.map((d) =>
+          d.id === deal.id ? { ...d, stage: newStage } : d
+        )
+      )
+    }
+    setDraggedDeal(null)
+  }
 
-  useEffect(() => {
-    // Your effect logic
-  }, [handleDialPadInput]); // Add handleDialPadInput to the dependency array
+  const handleDragEnd = () => {
+    setDraggedDeal(null)
+  }
 
-  return (
-    <div>
-      {/* Your component JSX */}
-    </div>
-  )
-}
+  const handleStageChange = (dealId: number, newStage: string) => {
+    setDeals((prevDeals) =>
+      prevDeals.map((d) =>
+        d.id === dealId ? { ...d, stage: newStage } : d
+      )
+    )
+    if (editedDeal && editedDeal.id === dealId) {
+      setEditedDeal({ ...editedDeal, stage: newStage })
+    }
+  }
+
+  const filteredDeals = useMemo(() => {
+    return filterStage === "All" ? deals : deals.filter(deal => deal.stage === filterStage)
+  }, [deals, filterStage])
+
+  const stages = ["New", "Attempting", "In Conversation", "Interested", "Appointments", "Post Appointment", "Future Opportunities", "Deal"]
+
+  const getStageColor = (stage: string) => {
+    const colors = {
+      "New": "bg-blue-500",
+      "Attempting": "bg-yellow-500",
+      "In Conversation": "bg-orange-500",
+      "Interested": "bg-green-500",
+      "Appointments": "bg-purple-500",
+      "Post Appointment": "bg-indigo-500",
+      "Future Opportunities": "bg-pink-500",
+      "Deal": "bg-red-500"
+    }
+    return colors[stage as keyof typeof colors] || "bg-gray-500"
+  }
+
+  const handleEditDeal = (deal: any) => {
+    setEditedDeal({ ...deal })
+    setEditMode(true)
+  }
+
+  const handleSaveDeal = () => {
+    setDeals(prevDeals =>
+      prevDeals.map(deal =>
+        deal.id === editedDeal.id ? editedDeal : deal
+      )
+    )
+    setEditMode(false)
+    setEditedDeal(null)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
+    const { value } = e.target
+    setEditedDeal(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSelectAllProperties = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      setSelectedProperties(filteredDeals.map(deal => deal.id))
+    } else {
+      setSelectedProperties([])
+    }
+  }
+
+  const handleSelectProperty = (dealId: number) => {
+    setSelectedProperties(prev => 
+      prev.includes(dealId) 
+        ? prev.filter(id => id !== dealId) 
+        : [...prev, dealId]
+    )
+  }
+
+  const handleDealTitleChange = (dealId: number, newTitle: string) => {
+    setDealPackages(prevPackages =>
+      prevPackages.map(pkg =>
+        pkg.id === dealId ? { ...pkg, name: newTitle } : pkg
+      )
+    )
+  }
+
+  const handleAddPropertyToPackage = (dealPackageId: number, propertyId: number) => {
+    setDealPackages(prevPackages =>
+      prevPackages.map(pkg =>
+        pkg.id === dealPackageId
+          ? { 
+              ...pkg, 
+              properties: [
+                ...pkg.properties, 
+                { 
+                  id: propertyId, 
+                  closingDate: new Date().toISOString().split('T')[0], 
+                  price: deals.find(d => d.id === propertyId)?.price || "N/A" 
+                }
+              ] 
+            }
+          : pkg
+      )
+    )
+  }
+
+  const handleUpdatePropertyInPackage = (dealPackageId: number, propertyId: number, updates: any) => {
+    setDealPackages(prevPackages =>
+      prevPackages.map(pkg =>
+        pkg.id === dealPackageId
+          ? {
+              ...pkg,
+              properties: pkg.properties.map(prop =>
+                prop.id === propertyId ? { ...prop, ...updates } : prop
+              )
+            }
+          : pkg
+      )
+    )
+  }
+
+  const handleAssignContact = (dealPackageId: number, role: string, contact: any) => {
+    setDealPackages(prevPackages =>
+      prevPackages.map(pkg =>
+        pkg.id === dealPackageId
+          ? { ...pkg, [role]: contact }
+          : pkg
+      )
+    )
+  }
+
+  const calculateProgress = (closingDate: string) => {
+    const today = new Date()
+    const closing = new Date(closingDate)
+    const totalDays = 90 // Assuming a 90-day closing period
+    const daysLeft = Math.max(0, Math.ceil((closing.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
+    return Math.min(100, Math.max(0, ((totalDays - daysLeft) / totalDays) * 100))
+  }
+
+  const handleExpandDeal = (deal: any) => {
+    setSelectedDeal(deal)
+    setCurrentDealIndex(deals.findIndex(d => d.id === deal.id))
+    setShowExpandedDetails(true)
+  }
+
+  const handlePreviousDeal = () => {
+    setCurrentDealIndex((prevIndex) => {
+      const newIndex = prevIndex > 0 ? prevIndex - 1 : deals.length - 1
+      setSelectedDeal(deals[newIndex])
+      return newIndex
+    })
+  }
+
+  const handleNextDeal = () => {
+    setCurrentDealIndex((prevIndex) => {
+      const newIndex = prevIndex < deals.length - 1 ? prevIndex + 1 : 0
+      setSelectedDeal(deals[newIndex])
+      return newIndex
+    })
+  }
 
   const handleViewOnZillow = () => {
     window.open(`https://www.zillow.com/homes/${selectedDeal.address.replace(/ /g, '-')}`, '_blank')
@@ -922,7 +1086,7 @@ export default function Component() {
                 <ChevronLeftIcon className="h-6 w-6" />
                 <span className="sr-only">Previous property</span>
               </Button>
-              <DialogTitle className="text-2xl font-bold flex-grow text-center">{selectedDeal?.title}</DialogTitle>
+              <DialogTitle className="text-2xl font-bold flex-grow text-center">{selectedDeal?.address}</DialogTitle>
               <Button variant="ghost" size="icon" onClick={handleNextDeal} className="ml-2">
                 <ChevronRightIcon className="h-6 w-6" />
                 <span className="sr-only">Next property</span>
@@ -956,8 +1120,8 @@ export default function Component() {
               <section className="h-64 w-full rounded-lg overflow-hidden">
                 <Map
                   initialViewState={{
-                    latitude: selectedDeal?.properties[0]?.latitude || 36.1627,
-                    longitude: selectedDeal?.properties[0]?.longitude || -86.7816,
+                    latitude: selectedDeal?.latitude || 36.1627,
+                    longitude: selectedDeal?.longitude || -86.7816,
                     zoom: 13
                   }}
                   style={{ width: '100%', height: '100%' }}
@@ -965,8 +1129,8 @@ export default function Component() {
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
                 >
                   <Marker
-                    latitude={selectedDeal?.properties[0]?.latitude || 36.1627}
-                    longitude={selectedDeal?.properties[0]?.longitude || -86.7816}
+                    latitude={selectedDeal?.latitude || 36.1627}
+                    longitude={selectedDeal?.longitude || -86.7816}
                   >
                     <div className={`w-6 h-6 rounded-full ${getStageColor(selectedDeal?.stage)} flex items-center justify-center text-white text-xs font-bold`}>
                       {selectedDeal?.id}
@@ -988,35 +1152,35 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center">
                         <BedSingleIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.bedrooms} Bedrooms</span>
+                        <span>{selectedDeal?.bedrooms} Bedrooms</span>
                       </div>
                       <div className="flex items-center">
                         <BathIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.bathrooms} Bathrooms</span>
+                        <span>{selectedDeal?.bathrooms} Bathrooms</span>
                       </div>
                       <div className="flex items-center">
                         <SquareIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.squareFeet} sq ft</span>
+                        <span>{selectedDeal?.squareFeet} sq ft</span>
                       </div>
                       <div className="flex items-center">
                         <CalendarIcon className="h-5 w-5 mr-2" />
-                        <span>Built in {selectedDeal?.properties[0]?.yearBuilt}</span>
+                        <span>Built in {selectedDeal?.yearBuilt}</span>
                       </div>
                       <div className="flex items-center">
                         <CarIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.garageSpaces} Garage Spaces</span>
+                        <span>{selectedDeal?.garageSpaces} Garage Spaces</span>
                       </div>
                       <div className="flex items-center">
                         <GraduationCapIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.schoolDistrict}</span>
+                        <span>{selectedDeal?.schoolDistrict}</span>
                       </div>
                       <div className="flex items-center">
                         <BuildingIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.propertyType}</span>
+                        <span>{selectedDeal?.propertyType}</span>
                       </div>
                       <div className="flex items-center">
                         <ThermometerIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.properties[0]?.heatingCooling}</span>
+                        <span>{selectedDeal?.heatingCooling}</span>
                       </div>
                     </div>
                   </section>
@@ -1026,7 +1190,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Appliances</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.properties[0]?.appliances.map((appliance: string, index: number) => (
+                          {selectedDeal?.appliances.map((appliance: string, index: number) => (
                             <li key={index}>{appliance}</li>
                           ))}
                         </ul>
@@ -1034,7 +1198,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Exterior Features</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.properties[0]?.exteriorFeatures.map((feature: string, index: number) => (
+                          {selectedDeal?.exteriorFeatures.map((feature: string, index: number) => (
                             <li key={index}>{feature}</li>
                           ))}
                         </ul>
@@ -1042,7 +1206,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Interior Features</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.properties[0]?.interiorFeatures.map((feature: string, index: number) => (
+                          {selectedDeal?.interiorFeatures.map((feature: string, index: number) => (
                             <li key={index}>{feature}</li>
                           ))}
                         </ul>
@@ -1054,20 +1218,20 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <h4 className="font-medium mb-2">HOA</h4>
-                        <p>Fee: {selectedDeal?.properties[0]?.hoa.fee}</p>
-                        <p>Includes: {selectedDeal?.properties[0]?.hoa.includes.join(', ')}</p>
+                        <p>Fee: {selectedDeal?.hoa.fee}</p>
+                        <p>Includes: {selectedDeal?.hoa.includes.join(', ')}</p>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Tax Information</h4>
-                        <p>Annual Amount: {selectedDeal?.properties[0]?.taxInfo.annualAmount}</p>
-                        <p>Year: {selectedDeal?.properties[0]?.taxInfo.year}</p>
+                        <p>Annual Amount: {selectedDeal?.taxInfo.annualAmount}</p>
+                        <p>Year: {selectedDeal?.taxInfo.year}</p>
                       </div>
                     </div>
                   </section>
                 </TabsContent>
                 <TabsContent value="contacts" className="space-y-4">
-                  {selectedDeal?.contacts.map((contact: Contact, index: number) => (
-                    <Card key={index} className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
+                  {selectedDeal?.contacts.map((contact: any, index: number) => (
+                    <Card key={index}>
                       <CardHeader>
                         <CardTitle>{contact.name} - {contact.role}</CardTitle>
                       </CardHeader>
