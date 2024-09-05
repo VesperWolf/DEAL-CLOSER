@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Map, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon, MegaphoneIcon, PlusIcon, MapIcon, KanbanIcon, ListIcon, ListOrderedIcon, ArrowUpIcon, ArrowDownIcon, BellIcon, XIcon, BriefcaseIcon, SunIcon, MoonIcon, MessageSquareIcon, PhoneIcon, MailIcon, ChevronDownIcon, ChevronUpIcon, EyeIcon, EditIcon, SaveIcon, BedSingleIcon, BathIcon, SquareIcon, CalendarIcon, CarIcon, GraduationCapIcon, BuildingIcon, ThermometerIcon, GridIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, StickyNoteIcon, XCircleIcon } from "lucide-react"
@@ -80,17 +80,10 @@ export default function Component() {
   const [dealViewMode, setDealViewMode] = useState("list")
   const [expandedDealId, setExpandedDealId] = useState<number | null>(null)
   const [showExpandedDetails, setShowExpandedDetails] = useState(false)
-  const [currentDealIndex, setCurrentDealIndex] = useState(0)
-
   const [dialPadNumber, setDialPadNumber] = useState('+1')
   const [textMessages, setTextMessages] = useState<string[]>([])
   const [currentTextMessage, setCurrentTextMessage] = useState('')
   const [notes, setNotes] = useState('')
-  const [emails, setEmails] = useState<{ id: number; subject: string; sender: string; preview: string; date: string }[]>([
-    { id: 1, subject: "New Listing Available", sender: "agent@realestate.com", preview: "Check out this new property that just hit the market!", date: "2024-09-01" },
-    { id: 2, subject: "Offer Update", sender: "client@email.com", preview: "I've reconsidered and would like to increase my offer to...", date: "2024-09-02" },
-    { id: 3, subject: "Closing Documents", sender: "legal@lawfirm.com", preview: "Please find attached the closing documents for review.", date: "2024-09-03" },
-  ])
 
   const [deals, setDeals] = useState(() => {
     const streets = ['Main St', 'Broadway', 'Hillsboro Pike', 'West End Ave', 'Church St', 'Music Row', 'Belmont Blvd', '12th Ave S', '8th Ave S', 'Woodland St']

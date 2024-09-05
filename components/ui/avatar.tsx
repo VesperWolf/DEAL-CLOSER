@@ -1,13 +1,14 @@
 import React from 'react';
+import Image from 'next/image';
 
 export const Avatar = ({ src, alt }) => (
-  <img className="avatar" src={src} alt={alt} />
+  <Image src={src} alt={alt} width={50} height={50} />
 );
 
 export const AvatarImage = ({ src, alt }) => (
-  <img className="avatar-image" src={src} alt={alt} />
+  <Image src={src} alt={alt} width={50} height={50} />
 );
 
 export const AvatarFallback = ({ children }) => (
-  <div className="avatar-fallback">{children}</div>
+  <div>{children}</div>
 );

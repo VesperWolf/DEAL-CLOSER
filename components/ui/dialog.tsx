@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-export const Dialog = ({ children, open, onOpenChange }) => (
-  open ? <div className="dialog">{children}</div> : null
+export const Dialog = ({ children }) => (
+  <div>{children}</div>
 );
 
 export const DialogContent = ({ children }) => (
-  <div className="dialog-content">{children}</div>
+  <div>{children}</div>
 );
 
 export const DialogHeader = ({ children }) => (
-  <div className="dialog-header">{children}</div>
+  <div>{children}</div>
 );
 
 export const DialogTitle = ({ children }) => (
-  <div className="dialog-title">{children}</div>
-);
-
-export const DialogTrigger = ({ children, onClick }) => (
-  <button className="dialog-trigger" onClick={onClick}>{children}</button>
+  <h2>{children}</h2>
 );

@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         background: '#f8f9fa', // Define your custom background color
         border: '#dee2e6', // Define your custom border color
+        foreground: '#333333', // Define your custom foreground color
       },
     },
   },

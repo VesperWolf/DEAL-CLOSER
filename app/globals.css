@@ -4,10 +4,13 @@
 
 @layer components {
   .bg-background {
-    @apply bg-background;
+    background-color: var(--background);
   }
   .border-border {
-    @apply border-border;
+    border-color: var(--border);
+  }
+  .text-foreground {
+    color: var(--foreground);
   }
 }
 
