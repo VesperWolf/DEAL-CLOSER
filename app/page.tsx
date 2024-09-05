@@ -13,7 +13,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Map, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import KeplerGl from 'kepler.gl'
 import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon, MegaphoneIcon, PlusIcon, MapIcon, KanbanIcon, ListIcon, ListOrderedIcon, ArrowUpIcon, ArrowDownIcon, BellIcon, XIcon, BriefcaseIcon, SunIcon, MoonIcon, MessageSquareIcon, PhoneIcon, MailIcon, ChevronDownIcon, ChevronUpIcon, BedSingleIcon, BathIcon, SquareIcon, CalendarIcon, CarIcon, GraduationCapIcon, BuildingIcon, ThermometerIcon, GridIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, StickyNoteIcon } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -54,43 +53,6 @@ const useMousePosition = () => {
   return { ...mousePosition, isMoving }
 }
 
-const CustomMapComponent = ({ selectedDeal }) => {
-  const [viewport, setViewport] = useState({
-    latitude: selectedDeal?.latitude || 36.1627,
-    longitude: selectedDeal?.longitude || -86.7816,
-    zoom: 12,
-  });
-
-  return (
-    <Map
-      {...viewport}
-      width="100%"
-      height="400px"
-      mapStyle="mapbox://styles/wolfofallstreets/cm0ndd5pl005t01qq4j39h23q" // Your custom style URL
-      mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN} // Ensure this is set in your .env file
-      onViewportChange={(nextViewport) => setViewport(nextViewport)}
-    >
-      <Marker
-        latitude={selectedDeal?.latitude || 36.1627}
-        longitude={selectedDeal?.longitude || -86.7816}
-      >
-        <div className="marker">📍</div>
-      </Marker>
-    </Map>
-  );
-};
-
-const KeplerMapComponent = () => {
-  return (
-    <KeplerGl
-      id="kepler"
-      width={window.innerWidth}
-      height={window.innerHeight}
-      mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-    />
-  );
-};
-
 export default function Component() {
   const [grid, setGrid] = useState<string[][]>([])
   const [showLoginForm, setShowLoginForm] = useState(false)
@@ -118,12 +80,17 @@ export default function Component() {
   const [dealViewMode, setDealViewMode] = useState("list")
   const [expandedDealId, setExpandedDealId] = useState<number | null>(null)
   const [showExpandedDetails, setShowExpandedDetails] = useState(false)
+  const [currentDealIndex, setCurrentDealIndex] = useState(0)
+
   const [dialPadNumber, setDialPadNumber] = useState('+1')
   const [textMessages, setTextMessages] = useState<string[]>([])
   const [currentTextMessage, setCurrentTextMessage] = useState('')
   const [notes, setNotes] = useState('')
-  const [currentDealIndex, setCurrentDealIndex] = useState(0)
-  const [mapView, setMapView] = useState('mapbox'); // 'mapbox' or 'kepler'
+  const [emails, setEmails] = useState<{ id: number; subject: string; sender: string; preview: string; date: string }[]>([
+    { id: 1, subject: "New Listing Available", sender: "agent@realestate.com", preview: "Check out this new property that just hit the market!", date: "2024-09-01" },
+    { id: 2, subject: "Offer Update", sender: "client@email.com", preview: "I've reconsidered and would like to increase my offer to...", date: "2024-09-02" },
+    { id: 3, subject: "Closing Documents", sender: "legal@lawfirm.com", preview: "Please find attached the closing documents for review.", date: "2024-09-03" },
+  ])
 
   const [deals, setDeals] = useState(() => {
     const streets = ['Main St', 'Broadway', 'Hillsboro Pike', 'West End Ave', 'Church St', 'Music Row', 'Belmont Blvd', '12th Ave S', '8th Ave S', 'Woodland St']
@@ -827,16 +794,29 @@ export default function Component() {
             )}
             {currentPage === "properties" && viewMode === "map" && (
               <div className="h-full">
-                <div className="absolute top-4 right-4 z-10">
-                  <Button onClick={() => setMapView(mapView === 'mapbox' ? 'kepler' : 'mapbox')}>
-                    {mapView === 'mapbox' ? 'Switch to Data View' : 'Switch to Map View'}
-                  </Button>
-                </div>
-                {mapView === 'mapbox' ? (
-                  <CustomMapComponent selectedDeal={selectedDeal} />
-                ) : (
-                  <KeplerMapComponent />
-                )}
+                <Map
+                  initialViewState={{
+                    latitude: 36.1627,
+                    longitude: -86.7816,
+                    zoom: 11
+                  }}
+                  style={{ width: '100%', height: '100%' }}
+                  mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+                >
+                  {filteredDeals.map((deal) => (
+                    <Marker
+                      key={deal.id}
+                      latitude={deal.latitude}
+                      longitude={deal.longitude}
+                      onClick={() => setSelectedDeal(deal)}
+                    >
+                      <div className={`w-6 h-6 rounded-full ${getStageColor(deal.stage)} flex items-center justify-center text-white text-xs font-bold cursor-pointer`}>
+                        {deal.id}
+                      </div>
+                    </Marker>
+                  ))}
+                </Map>
               </div>
             )}
             {currentPage === "properties" && viewMode === "list" && (
@@ -1152,7 +1132,7 @@ export default function Component() {
                     zoom: 13
                   }}
                   style={{ width: '100%', height: '100%' }}
-                  mapStyle="mapbox://styles/mapbox/dark-v10"
+                  mapStyle={process.env.NEXT_PUBLIC_MAPBOX_STYLE}
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
                 >
                   <Marker
