@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Map, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
-import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon, MegaphoneIcon, PlusIcon, MapIcon, KanbanIcon, ListIcon, ListOrderedIcon, ArrowUpIcon, ArrowDownIcon, BellIcon, XIcon, BriefcaseIcon, SunIcon, MoonIcon, MessageSquareIcon, PhoneIcon, MailIcon, ChevronDownIcon, ChevronUpIcon, EyeIcon, EditIcon, SaveIcon, BedSingleIcon, BathIcon, SquareIcon, CalendarIcon, CarIcon, GraduationCapIcon, BuildingIcon, ThermometerIcon, GridIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, StickyNoteIcon, XCircleIcon } from "lucide-react"
+import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon, MegaphoneIcon, PlusIcon, MapIcon, KanbanIcon, ListIcon, ListOrderedIcon, ArrowUpIcon, ArrowDownIcon, BellIcon, XIcon, BriefcaseIcon, SunIcon, MoonIcon, MessageSquareIcon, PhoneIcon, MailIcon, ChevronDownIcon, ChevronUpIcon, BedSingleIcon, BathIcon, SquareIcon, CalendarIcon, CarIcon, GraduationCapIcon, BuildingIcon, ThermometerIcon, GridIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, StickyNoteIcon } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 
