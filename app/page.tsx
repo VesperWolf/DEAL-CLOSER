@@ -10,10 +10,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import Map, { Marker } from 'react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon, MegaphoneIcon, PlusIcon, MapIcon, KanbanIcon, ListIcon, ListOrderedIcon, ArrowUpIcon, ArrowDownIcon, BellIcon, XIcon, BriefcaseIcon, SunIcon, MoonIcon, MessageSquareIcon, PhoneIcon, MailIcon, ChevronDownIcon, ChevronUpIcon, EyeIcon, EditIcon, SaveIcon, BedSingleIcon, BathIcon, SquareIcon, CalendarIcon, CarIcon, GraduationCapIcon, BuildingIcon, ThermometerIcon, GridIcon, ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, StickyNoteIcon, XCircleIcon } from "lucide-react"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 
@@ -802,7 +802,7 @@ export default function Component() {
                   }}
                   style={{ width: '100%', height: '100%' }}
                   mapStyle="mapbox://styles/mapbox/dark-v10"
-                  mapboxAccessToken="pk.eyJ1IjoiZWxpLWFpIiwiYSI6ImNsaWNhOWNjZzAxMmgzcXA5bXVnZmNqNHEifQ.5ywGbtgMsJd6uRVNwPKpIg"
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
                 >
                   {filteredDeals.map((deal) => (
                     <Marker
@@ -1353,101 +1353,6 @@ export default function Component() {
           justifyContent: 'center',
           alignItems: 'flex-end',
         }}
-      >
-        <div 
-          className="flex space-x-4 pointer-events-auto mb-16"
-          style={{
-            position: 'absolute',
-            left: `${actionBarPosition + 120}px`,
-            transform: 'translateX(-50%)',
-          }}
-        >
-          {openPopups.map((popupName, index) => (
-            <div
-              key={popupName}
-              className={`w-80 h-96 ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'} rounded-lg shadow-lg p-4 border ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
-            >
-              {popupName === 'robotChat' && (
-                <>
-                  <h3 className="text-lg font-bold mb-2">AI Assistant</h3>
-                  <div className={`h-72 overflow-y-auto mb-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} p-2 rounded`}>
-                    {/* Chat messages would go here */}
-                  </div>
-                  <Input placeholder="Type your message..." className={isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'} />
-                </>
-              )}
-              {popupName === 'dialPad' && (
-                <>
-                  <h3 className="text-lg font-bold mb-2">Dial Pad</h3>
-                  <Input value={dialPadNumber} readOnly className={`mb-2 ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`} />
-                  <div className="grid grid-cols-3 gap-2">
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, '*', 0, '#'].map((digit) => (
-                      <Button key={digit} onClick={() => handleDialPadInput(digit.toString())} className={`rounded-full ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}>{digit}</Button>
-                    ))}
-                  </div>
-                </>
-              )}
-              {popupName === 'textMessages' && (
-                <>
-                  <h3 className="text-lg font-bold mb-2">Text Messages</h3>
-                  <div className={`h-64 overflow-y-auto mb-2 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'} p-2 rounded`}>
-                    {textMessages.map((message, index) => (
-                      <div key={index} className="mb-2">{message}</div>
-                    ))}
-                  </div>
-                  <div className="flex">
-                    <Input
-                      value={currentTextMessage}
-                      onChange={(e) => setCurrentTextMessage(e.target.value)}
-                      placeholder="Type your message..."
-                      className={`mr-2 ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-black'}`}
-                    />
-                    <Button onClick={handleSendTextMessage} className={isDarkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'}>Send</Button>
-                  </div>
-                </>
-              )}
-              {popupName === 'emailInbox' && (
-                <>
-                  <h3 className="text-lg font-bold mb-2">Email Inbox</h3>
-                  <div className="h-80 overflow-y-auto">
-                    {emails.map((email) => (
-                      <Card key={email.id} className={`mb-2 ${isDarkMode ? 'bg-gray-700' : 'bg-white'}`}>
-                        <CardHeader>
-                          <CardTitle className="text-sm font-medium">{email.subject}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-500'}`}>{email.sender}</p>
-                          <p className="text-sm mt-1">{email.preview}</p>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </>
-              )}
-              {popupName === 'notepad' && (
-                <div className="relative w-full h-full">
-                  <div className={`absolute inset-0 ${isDarkMode ? 'bg-yellow-900' : 'bg-yellow-100'} rounded-lg shadow-lg transform rotate-1 z-10`}></div>
-                  <div className={`absolute inset-0 ${isDarkMode ? 'bg-yellow-800' : 'bg-yellow-50'} rounded-lg shadow-lg transform -rotate-1 z-20`}></div>
-                  <div className={`absolute inset-0 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-lg z-30 overflow-hidden`}>
-                    <div className={`h-full p-4 ${isDarkMode ? 'bg-[linear-gradient(to_right,transparent_0%,transparent_calc(100%_-_1px),#4a4a4a_calc(100%_-_1px))]' : 'bg-[linear-gradient(to_right,transparent_0%,transparent_calc(100%_-_1px),#e5e5e5_calc(100%_-_1px))]'} bg-[length:24px_24px]`}>
-                      <textarea
-                        value={notes}
-                        onChange={handleNotepadInput}
-                        className={`w-full h-full bg-transparent resize-none outline-none leading-[24px] ${isDarkMode ? 'text-white' : 'text-black'}`}
-                        placeholder="Click anywhere to start typing..."
-                        style={{ lineHeight: '24px' }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
       >
         <div 
           className="flex space-x-4 pointer-events-auto mb-16"

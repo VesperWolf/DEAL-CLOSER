@@ -1,5 +1,7 @@
 import React from 'react';
 
-export function Button({ children, ...props }) {
-  return <button {...props}>{children}</button>;
-}
+export const Label = ({ children, htmlFor, className }) => (
+  <label className={`label ${className}`} htmlFor={htmlFor}>
+    {children}
+  </label>
+);
