@@ -1346,13 +1346,9 @@ export default function Component() {
           <MailIcon className="h-4 w-4" />
         </Button>
       </div>
-      <div 
-        className="fixed inset-0 pointer-events-none z-40"
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
-        }}
+    </div>
+  )
+}
       >
         <div 
           className="flex space-x-4 pointer-events-auto mb-16"
