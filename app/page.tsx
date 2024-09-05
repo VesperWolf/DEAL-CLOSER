@@ -70,100 +70,25 @@ export default function Component() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [currentPage, setCurrentPage] = useState("properties")
   const [viewMode, setViewMode] = useState("list")
-  const [selectedDeal, setSelectedDeal] = useState<any>(null) // Replace `any` with the actual type
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
   const [editMode, setEditMode] = useState(false)
-  const [editedDeal, setEditedDeal] = useState<any>(null) // Replace `any` with the actual type
+  const [editedDeal, setEditedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
   const [filterStage, setFilterStage] = useState("All")
   const [selectedProperties, setSelectedProperties] = useState<number[]>([])
   const [showUserProfile, setShowUserProfile] = useState(false)
-  const [draggedDeal, setDraggedDeal] = useState<any>(null) // Replace `any` with the actual type
+  const [draggedDeal, setDraggedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
   const [dealViewMode, setDealViewMode] = useState("list")
   const [expandedDealId, setExpandedDealId] = useState<number | null>(null)
   const [showExpandedDetails, setShowExpandedDetails] = useState(false)
-  // const [currentDealIndex, setCurrentDealIndex] = useState(0) // Commented out unused variable
+  const [currentDealIndex, setCurrentDealIndex] = useState(0) // Uncommented variable
 
   const [dialPadNumber, setDialPadNumber] = useState('+1')
   const [textMessages, setTextMessages] = useState<string[]>([])
   const [currentTextMessage, setCurrentTextMessage] = useState('')
   const [notes, setNotes] = useState('')
-  // const [emails, setEmails] = useState<{ id: number; subject: string; sender: string; preview: string; date: string }[]>([
-  //   { id: 1, subject: "New Listing Available", sender: "agent@realestate.com", preview: "Check out this new property that just hit the market!", date: "2024-09-01" },
-  //   { id: 2, subject: "Offer Update", sender: "client@email.com", preview: "I've reconsidered and would like to increase my offer to...", date: "2024-09-02" },
-  //   { id: 3, subject: "Closing Documents", sender: "legal@lawfirm.com", preview: "Please find attached the closing documents for review.", date: "2024-09-03" },
-  // ]) // Commented out unused variable
-
-  const [deals, setDeals] = useState(() => {
-    const streets = ['Main St', 'Broadway', 'Hillsboro Pike', 'West End Ave', 'Church St', 'Music Row', 'Belmont Blvd', '12th Ave S', '8th Ave S', 'Woodland St']
-    const cities = ['Nashville', 'Franklin', 'Brentwood', 'Murfreesboro', 'Hendersonville']
-    const stages = ["New", "Attempting", "In Conversation", "Interested", "Appointments", "Post Appointment", "Future Opportunities", "Deal"]
-    
-    return Array.from({ length: 30 }, (_, i) => ({
-      id: i + 1,
-      address: `${Math.floor(Math.random() * 1000) + 1} ${streets[Math.floor(Math.random() * streets.length)]}, ${cities[Math.floor(Math.random() * cities.length)]}, TN`,
-      price: `$${(Math.floor(Math.random() * 1000) + 200) * 1000}`,
-      date: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString().split('T')[0],
-      stage: stages[Math.floor(Math.random() * stages.length)],
-      latitude: 36.1627 + (Math.random() - 0.5) * 0.1,
-      longitude: -86.7816 + (Math.random() - 0.5) * 0.1,
-      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-      squareFeet: Math.floor(Math.random() * 3000) + 1000,
-      bedrooms: Math.floor(Math.random() * 5) + 1,
-      bathrooms: Math.floor(Math.random() * 3) + 1,
-      yearBuilt: Math.floor(Math.random() * 50) + 1970,
-      lotSize: `${(Math.random() * 0.9 + 0.1).toFixed(2)} acres`,
-      garageSpaces: Math.floor(Math.random() * 3),
-      schoolDistrict: "Metro Nashville Public Schools",
-      propertyType: Math.random() > 0.3 ? "Single Family Home" : "Condo",
-      heatingCooling: "Central HVAC",
-      appliances: ["Refrigerator", "Dishwasher", "Washer", "Dryer"],
-      exteriorFeatures: ["Deck", "Fenced Yard", "Sprinkler System"],
-      interiorFeatures: ["Hardwood Floors", "Fireplace", "Open Floor Plan"],
-      hoa: {
-        fee: Math.random() > 0.5 ? `$${Math.floor(Math.random() * 300) + 50}/month` : "N/A",
-        includes: ["Common Area Maintenance", "Trash Removal"]
-      },
-      taxInfo: {
-        annualAmount: `$${Math.floor(Math.random() * 5000) + 2000}`,
-        year: 2023
-      },
-      contacts: [
-        { name: `Agent ${i + 1}`, email: `agent${i + 1}@example.com`, phone: `615-555-${1000 + i}`, role: "Listing Agent" },
-      ],
-      communications: [
-        { type: "email", date: "2024-07-01", content: "Initial outreach to listing agent" },
-      ],
-      activities: [
-        { type: "viewing", date: "2024-07-10", content: "Property viewing scheduled with potential buyers" },
-      ],
-    }))
-  })
-
-  const [dealPackages, setDealPackages] = useState([
-    { 
-      id: 1, 
-      name: "Downtown Nashville Package", 
-      properties: [
-        { id: 1, closingDate: "2024-12-15", price: "$450,000" },
-        { id: 2, closingDate: "2024-12-20", price: "$750,000" },
-      ],
-      buyer: { name: "John Doe", email: "john@example.com", phone: "615-555-1234" },
-      seller: { name: "Jane Smith", email: "jane@example.com", phone: "615-555-5678" }
-    },
-    { 
-      id: 2, 
-      name: "Luxury Homes Collection", 
-      properties: [
-        { id: 3, closingDate: "2025-01-10", price: "$1,200,000" }
-      ],
-      buyer: { name: "Alice Brown", email: "alice@example.com", phone: "615-555-3698" },
-      seller: { name: "Bob Johnson", email: "bob@example.com", phone: "615-555-2468" }
-    },
+  const [emails, setEmails] = useState<{ id: number; subject: string; sender: string; preview: string; date: string }[]>([
+    // Your initial email data here
   ])
-
-  const [actionBarPosition, setActionBarPosition] = useState(50) // Start at the width of the left sidebar
-  const [isDragging, setIsDragging] = useState(false)
-  const actionBarRef = useRef<HTMLDivElement>(null)
-  const [openPopups, setOpenPopups] = useState<string[]>([])
 
   const initializeGrid = useCallback(() => {
     if (!containerRef.current) return []
@@ -267,85 +192,131 @@ export default function Component() {
 
   return (
     <div>
-      {/* Your component JSX */}
+      <div ref={containerRef} className="relative h-screen w-screen bg-black overflow-hidden font-mono" style={{ fontFamily: "'Source Code Pro', monospace" }}>
+        <div className={`absolute inset-0 flex flex-col justify-start items-start leading-tight text-base ${isHovering ? 'text-red-500' : 'text-white'}`}>
+          {grid.map((row, i) => (
+            <div key={i} className="flex whitespace-nowrap w-full">
+              {row.map((char, j) => (
+                <span key={`${i}-${j}`} className="inline-block text-center" style={{ width: '0.6em' }}>{char}</span>
+              ))}
+            </div>
+          ))}
+        </div>
+        <Button 
+          ref={loginButtonRef}
+          className={`absolute bottom-4 right-4 bg-white text-black hover:bg-gray-200 transition-all duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
+          onClick={handleLoginClick}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          LOGIN
+        </Button>
+        {showLoginForm && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-black p-8 rounded-lg border border-white">
+              <h2 className="text-white text-2xl mb-4 text-center">Login</h2>
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-white">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="bg-black text-white border-white focus:ring-white"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-white">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="bg-black text-white border-white focus:ring-white"
+                  />
+                </div>
+                <div className="flex space-x-2">
+                  <Button 
+                    type="submit"
+                    className="flex-1 bg-white text-black hover:bg-gray-200 transition-all duration-300"
+                  >
+                    Login
+                  </Button>
+                  <Button 
+                    type="button"
+                    onClick={() => setShowLoginForm(false)}
+                    className="flex-1 bg-red-500 text-white hover:bg-red-600 transition-all duration-300"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+      {showDealManagement ? (
+        <div className={`flex h-screen overflow-hidden ${isDarkMode ? 'bg-gray-950 text-white' : 'bg-white text-black'}`}>
+          <aside className="flex flex-col items-center justify-between w-[50px] bg-[#c00] text-white border-r border-gray-800">
+            <div className="space-y-4 mt-4">
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setCurrentPage("properties")}>
+                <HomeIcon className="h-5 w-5" />
+                <span className="sr-only">Properties</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                <DollarSignIcon className="h-5 w-5" />
+                <span className="sr-only">Finances</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                <UserIcon className="h-5 w-5" />
+                <span className="sr-only">Users</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                <FileIcon className="h-5 w-5" />
+                <span className="sr-only">Documents</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                <BotIcon className="h-5 w-5" />
+                <span className="sr-only">AI Assistant</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setViewMode("activities")}>
+                <CalendarDaysIcon className="h-5 w-5" />
+                <span className="sr-only">Calendar</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                <MegaphoneIcon className="h-5 w-5" />
+                <span className="sr-only">Announcements</span>
+              </Button>
+              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setCurrentPage("deals")}>
+                <BriefcaseIcon className="h-5 w-5" />
+                <span className="sr-only">Deals</span>
+              </Button>
+            </div>
+            <div className="mb-4 space-y-4">
+              <Button variant="ghost" size="icon" onClick={() => setIsDarkMode(!isDarkMode)} className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
+                {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+                <span className="sr-only">Toggle theme</span>
+              </Button>
+            </div>
+          </aside>
+          <main className="flex-1 overflow-auto">
+            {/* Your main content here */}
+          </main>
+        </div>
+      ) : (
+        <div className="flex items-center justify-center h-screen bg-black">
+          <div className="text-white text-2xl" style={{ fontFamily: "'Source Code Pro', monospace" }}>
+            {welcomeMessage}
+            {showCursor && <span className="animate-cursor">█</span>}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
-
-  const handleAddPropertyToPackage = (dealPackageId: number, propertyId: number) => {
-    setDealPackages(prevPackages =>
-      prevPackages.map(pkg =>
-        pkg.id === dealPackageId
-          ? { 
-              ...pkg, 
-              properties: [
-                ...pkg.properties, 
-                { 
-                  id: propertyId, 
-                  closingDate: new Date().toISOString().split('T')[0], 
-                  price: deals.find(d => d.id === propertyId)?.price || "N/A" 
-                }
-              ] 
-            }
-          : pkg
-      )
-    )
-  }
-
-  const handleUpdatePropertyInPackage = (dealPackageId: number, propertyId: number, updates: any) => {
-    setDealPackages(prevPackages =>
-      prevPackages.map(pkg =>
-        pkg.id === dealPackageId
-          ? {
-              ...pkg,
-              properties: pkg.properties.map(prop =>
-                prop.id === propertyId ? { ...prop, ...updates } : prop
-              )
-            }
-          : pkg
-      )
-    )
-  }
-
-  const handleAssignContact = (dealPackageId: number, role: string, contact: any) => {
-    setDealPackages(prevPackages =>
-      prevPackages.map(pkg =>
-        pkg.id === dealPackageId
-          ? { ...pkg, [role]: contact }
-          : pkg
-      )
-    )
-  }
-
-  const calculateProgress = (closingDate: string) => {
-    const today = new Date()
-    const closing = new Date(closingDate)
-    const totalDays = 90 // Assuming a 90-day closing period
-    const daysLeft = Math.max(0, Math.ceil((closing.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)))
-    return Math.min(100, Math.max(0, ((totalDays - daysLeft) / totalDays) * 100))
-  }
-
-  const handleExpandDeal = (deal: any) => {
-    setSelectedDeal(deal)
-    setCurrentDealIndex(deals.findIndex(d => d.id === deal.id))
-    setShowExpandedDetails(true)
-  }
-
-  const handlePreviousDeal = () => {
-    setCurrentDealIndex((prevIndex) => {
-      const newIndex = prevIndex > 0 ? prevIndex - 1 : deals.length - 1
-      setSelectedDeal(deals[newIndex])
-      return newIndex
-    })
-  }
-
-  const handleNextDeal = () => {
-    setCurrentDealIndex((prevIndex) => {
-      const newIndex = prevIndex < deals.length - 1 ? prevIndex + 1 : 0
-      setSelectedDeal(deals[newIndex])
-      return newIndex
-    })
-  }
 
   const handleViewOnZillow = () => {
     window.open(`https://www.zillow.com/homes/${selectedDeal.address.replace(/ /g, '-')}`, '_blank')
@@ -1153,7 +1124,7 @@ export default function Component() {
                 </TabsContent>
                 <TabsContent value="contacts" className="space-y-4">
                   {selectedDeal?.contacts.map((contact: any, index: number) => (
-                    <Card key={index}>
+                    <Card key={index} className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                       <CardHeader>
                         <CardTitle>{contact.name} - {contact.role}</CardTitle>
                       </CardHeader>
