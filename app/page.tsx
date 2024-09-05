@@ -17,6 +17,70 @@ import { HomeIcon, DollarSignIcon, UserIcon, FileIcon, BotIcon, CalendarDaysIcon
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 
+// Type Definitions
+type Deal = {
+  id: number;
+  title: string;
+  price: string;
+  closingDate: string;
+  stage: string;
+  properties: Property[];
+  contacts: Contact[];
+  communications: Communication[];
+  activities: Activity[];
+};
+
+type Property = {
+  id: number;
+  address: string;
+  latitude: number;
+  longitude: number;
+  description: string;
+  squareFeet: number;
+  bedrooms: number;
+  bathrooms: number;
+  yearBuilt: number;
+  lotSize: string;
+  garageSpaces: number;
+  schoolDistrict: string;
+  propertyType: string;
+  heatingCooling: string;
+  appliances: string[];
+  exteriorFeatures: string[];
+  interiorFeatures: string[];
+  hoa: {
+    fee: string;
+    includes: string[];
+  };
+  taxInfo: {
+    annualAmount: string;
+    year: number;
+  };
+};
+
+type Contact = {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+};
+
+type Communication = {
+  id: number;
+  type: string;
+  date: string;
+  content: string;
+};
+
+type Activity = {
+  id: number;
+  type: string;
+  date: string;
+  content: string;
+};
+
+// Rest of your component code
 const CHARACTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+'
 const LOGIN_PATTERN = 'LOGIN_'
 const WELCOME_MESSAGE = 'WELCOME, ELI'
@@ -70,17 +134,17 @@ export default function Component() {
   const [isDarkMode, setIsDarkMode] = useState(true)
   const [currentPage, setCurrentPage] = useState("properties")
   const [viewMode, setViewMode] = useState("list")
-  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
+  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null)
   const [editMode, setEditMode] = useState(false)
-  const [editedDeal, setEditedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
+  const [editedDeal, setEditedDeal] = useState<Deal | null>(null)
   const [filterStage, setFilterStage] = useState("All")
   const [selectedProperties, setSelectedProperties] = useState<number[]>([])
   const [showUserProfile, setShowUserProfile] = useState(false)
-  const [draggedDeal, setDraggedDeal] = useState<Deal | null>(null) // Replace `any` with the actual type
+  const [draggedDeal, setDraggedDeal] = useState<Deal | null>(null)
   const [dealViewMode, setDealViewMode] = useState("list")
   const [expandedDealId, setExpandedDealId] = useState<number | null>(null)
   const [showExpandedDetails, setShowExpandedDetails] = useState(false)
-  const [currentDealIndex, setCurrentDealIndex] = useState(0) // Uncommented variable
+  const [currentDealIndex, setCurrentDealIndex] = useState(0)
 
   const [dialPadNumber, setDialPadNumber] = useState('+1')
   const [textMessages, setTextMessages] = useState<string[]>([])
@@ -174,15 +238,15 @@ export default function Component() {
   //   // Your logic here
   // } // Commented out unused function
 
-  // const handleAddPropertyToPackage = (packageId: number, property: any) => {
+  // const handleAddPropertyToPackage = (packageId: number, property: Property) => {
   //   // Your logic here
   // } // Commented out unused function
 
-  // const handleUpdatePropertyInPackage = (packageId: number, propertyId: number, updatedProperty: any) => {
+  // const handleUpdatePropertyInPackage = (packageId: number, propertyId: number, updatedProperty: Property) => {
   //   // Your logic here
   // } // Commented out unused function
 
-  // const handleAssignContact = (dealId: number, contact: any) => {
+  // const handleAssignContact = (dealId: number, contact: Contact) => {
   //   // Your logic here
   // } // Commented out unused function
 
@@ -192,128 +256,7 @@ export default function Component() {
 
   return (
     <div>
-      <div ref={containerRef} className="relative h-screen w-screen bg-black overflow-hidden font-mono" style={{ fontFamily: "'Source Code Pro', monospace" }}>
-        <div className={`absolute inset-0 flex flex-col justify-start items-start leading-tight text-base ${isHovering ? 'text-red-500' : 'text-white'}`}>
-          {grid.map((row, i) => (
-            <div key={i} className="flex whitespace-nowrap w-full">
-              {row.map((char, j) => (
-                <span key={`${i}-${j}`} className="inline-block text-center" style={{ width: '0.6em' }}>{char}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-        <Button 
-          ref={loginButtonRef}
-          className={`absolute bottom-4 right-4 bg-white text-black hover:bg-gray-200 transition-all duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
-          onClick={handleLoginClick}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-        >
-          LOGIN
-        </Button>
-        {showLoginForm && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-black p-8 rounded-lg border border-white">
-              <h2 className="text-white text-2xl mb-4 text-center">Login</h2>
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-white">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="bg-black text-white border-white focus:ring-white"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-white">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="bg-black text-white border-white focus:ring-white"
-                  />
-                </div>
-                <div className="flex space-x-2">
-                  <Button 
-                    type="submit"
-                    className="flex-1 bg-white text-black hover:bg-gray-200 transition-all duration-300"
-                  >
-                    Login
-                  </Button>
-                  <Button 
-                    type="button"
-                    onClick={() => setShowLoginForm(false)}
-                    className="flex-1 bg-red-500 text-white hover:bg-red-600 transition-all duration-300"
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-      </div>
-      {showDealManagement ? (
-        <div className={`flex h-screen overflow-hidden ${isDarkMode ? 'bg-gray-950 text-white' : 'bg-white text-black'}`}>
-          <aside className="flex flex-col items-center justify-between w-[50px] bg-[#c00] text-white border-r border-gray-800">
-            <div className="space-y-4 mt-4">
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setCurrentPage("properties")}>
-                <HomeIcon className="h-5 w-5" />
-                <span className="sr-only">Properties</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                <DollarSignIcon className="h-5 w-5" />
-                <span className="sr-only">Finances</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                <UserIcon className="h-5 w-5" />
-                <span className="sr-only">Users</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                <FileIcon className="h-5 w-5" />
-                <span className="sr-only">Documents</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                <BotIcon className="h-5 w-5" />
-                <span className="sr-only">AI Assistant</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setViewMode("activities")}>
-                <CalendarDaysIcon className="h-5 w-5" />
-                <span className="sr-only">Calendar</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                <MegaphoneIcon className="h-5 w-5" />
-                <span className="sr-only">Announcements</span>
-              </Button>
-              <Button variant="ghost" size="icon" className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10" onClick={() => setCurrentPage("deals")}>
-                <BriefcaseIcon className="h-5 w-5" />
-                <span className="sr-only">Deals</span>
-              </Button>
-            </div>
-            <div className="mb-4 space-y-4">
-              <Button variant="ghost" size="icon" onClick={() => setIsDarkMode(!isDarkMode)} className="hover:bg-[#f0f0f0] hover:text-[#c00] w-10 h-10">
-                {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
-                <span className="sr-only">Toggle theme</span>
-              </Button>
-            </div>
-          </aside>
-          <main className="flex-1 overflow-auto">
-            {/* Your main content here */}
-          </main>
-        </div>
-      ) : (
-        <div className="flex items-center justify-center h-screen bg-black">
-          <div className="text-white text-2xl" style={{ fontFamily: "'Source Code Pro', monospace" }}>
-            {welcomeMessage}
-            {showCursor && <span className="animate-cursor">█</span>}
-          </div>
-        </div>
-      )}
+      {/* Your component JSX */}
     </div>
   )
 }
@@ -979,7 +922,7 @@ export default function Component() {
                 <ChevronLeftIcon className="h-6 w-6" />
                 <span className="sr-only">Previous property</span>
               </Button>
-              <DialogTitle className="text-2xl font-bold flex-grow text-center">{selectedDeal?.address}</DialogTitle>
+              <DialogTitle className="text-2xl font-bold flex-grow text-center">{selectedDeal?.title}</DialogTitle>
               <Button variant="ghost" size="icon" onClick={handleNextDeal} className="ml-2">
                 <ChevronRightIcon className="h-6 w-6" />
                 <span className="sr-only">Next property</span>
@@ -1013,8 +956,8 @@ export default function Component() {
               <section className="h-64 w-full rounded-lg overflow-hidden">
                 <Map
                   initialViewState={{
-                    latitude: selectedDeal?.latitude || 36.1627,
-                    longitude: selectedDeal?.longitude || -86.7816,
+                    latitude: selectedDeal?.properties[0]?.latitude || 36.1627,
+                    longitude: selectedDeal?.properties[0]?.longitude || -86.7816,
                     zoom: 13
                   }}
                   style={{ width: '100%', height: '100%' }}
@@ -1022,8 +965,8 @@ export default function Component() {
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
                 >
                   <Marker
-                    latitude={selectedDeal?.latitude || 36.1627}
-                    longitude={selectedDeal?.longitude || -86.7816}
+                    latitude={selectedDeal?.properties[0]?.latitude || 36.1627}
+                    longitude={selectedDeal?.properties[0]?.longitude || -86.7816}
                   >
                     <div className={`w-6 h-6 rounded-full ${getStageColor(selectedDeal?.stage)} flex items-center justify-center text-white text-xs font-bold`}>
                       {selectedDeal?.id}
@@ -1045,35 +988,35 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex items-center">
                         <BedSingleIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.bedrooms} Bedrooms</span>
+                        <span>{selectedDeal?.properties[0]?.bedrooms} Bedrooms</span>
                       </div>
                       <div className="flex items-center">
                         <BathIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.bathrooms} Bathrooms</span>
+                        <span>{selectedDeal?.properties[0]?.bathrooms} Bathrooms</span>
                       </div>
                       <div className="flex items-center">
                         <SquareIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.squareFeet} sq ft</span>
+                        <span>{selectedDeal?.properties[0]?.squareFeet} sq ft</span>
                       </div>
                       <div className="flex items-center">
                         <CalendarIcon className="h-5 w-5 mr-2" />
-                        <span>Built in {selectedDeal?.yearBuilt}</span>
+                        <span>Built in {selectedDeal?.properties[0]?.yearBuilt}</span>
                       </div>
                       <div className="flex items-center">
                         <CarIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.garageSpaces} Garage Spaces</span>
+                        <span>{selectedDeal?.properties[0]?.garageSpaces} Garage Spaces</span>
                       </div>
                       <div className="flex items-center">
                         <GraduationCapIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.schoolDistrict}</span>
+                        <span>{selectedDeal?.properties[0]?.schoolDistrict}</span>
                       </div>
                       <div className="flex items-center">
                         <BuildingIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.propertyType}</span>
+                        <span>{selectedDeal?.properties[0]?.propertyType}</span>
                       </div>
                       <div className="flex items-center">
                         <ThermometerIcon className="h-5 w-5 mr-2" />
-                        <span>{selectedDeal?.heatingCooling}</span>
+                        <span>{selectedDeal?.properties[0]?.heatingCooling}</span>
                       </div>
                     </div>
                   </section>
@@ -1083,7 +1026,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Appliances</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.appliances.map((appliance: string, index: number) => (
+                          {selectedDeal?.properties[0]?.appliances.map((appliance: string, index: number) => (
                             <li key={index}>{appliance}</li>
                           ))}
                         </ul>
@@ -1091,7 +1034,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Exterior Features</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.exteriorFeatures.map((feature: string, index: number) => (
+                          {selectedDeal?.properties[0]?.exteriorFeatures.map((feature: string, index: number) => (
                             <li key={index}>{feature}</li>
                           ))}
                         </ul>
@@ -1099,7 +1042,7 @@ export default function Component() {
                       <div>
                         <h4 className="font-medium mb-2">Interior Features</h4>
                         <ul className="list-disc list-inside">
-                          {selectedDeal?.interiorFeatures.map((feature: string, index: number) => (
+                          {selectedDeal?.properties[0]?.interiorFeatures.map((feature: string, index: number) => (
                             <li key={index}>{feature}</li>
                           ))}
                         </ul>
@@ -1111,19 +1054,19 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <h4 className="font-medium mb-2">HOA</h4>
-                        <p>Fee: {selectedDeal?.hoa.fee}</p>
-                        <p>Includes: {selectedDeal?.hoa.includes.join(', ')}</p>
+                        <p>Fee: {selectedDeal?.properties[0]?.hoa.fee}</p>
+                        <p>Includes: {selectedDeal?.properties[0]?.hoa.includes.join(', ')}</p>
                       </div>
                       <div>
                         <h4 className="font-medium mb-2">Tax Information</h4>
-                        <p>Annual Amount: {selectedDeal?.taxInfo.annualAmount}</p>
-                        <p>Year: {selectedDeal?.taxInfo.year}</p>
+                        <p>Annual Amount: {selectedDeal?.properties[0]?.taxInfo.annualAmount}</p>
+                        <p>Year: {selectedDeal?.properties[0]?.taxInfo.year}</p>
                       </div>
                     </div>
                   </section>
                 </TabsContent>
                 <TabsContent value="contacts" className="space-y-4">
-                  {selectedDeal?.contacts.map((contact: any, index: number) => (
+                  {selectedDeal?.contacts.map((contact: Contact, index: number) => (
                     <Card key={index} className={`${isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-black'}`}>
                       <CardHeader>
                         <CardTitle>{contact.name} - {contact.role}</CardTitle>
